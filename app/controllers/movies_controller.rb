@@ -1,5 +1,6 @@
 class MoviesController < ApplicationController
 
+  @@sort_by = nil
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date)
   end
@@ -11,7 +12,13 @@ class MoviesController < ApplicationController
   end
 
   def index
+    @sort_by = params[:sort_by]
     @movies = Movie.all
+    @movies = @movies.order(@sort_by)
+
+    
+    
+    
   end
 
   def new
