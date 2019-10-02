@@ -16,7 +16,9 @@ class MoviesController < ApplicationController
     sortSel = params[:sort_by]
     #@sort_by = params[:sort_by]
     if !(sortSel.nil?)
-      @sort_by = sortSel
+      if (sortSel != '')
+        session[:sort] = sortSel
+      end
     end
     @select = params[:ratings]
     if (@select.nil?)
@@ -32,7 +34,7 @@ class MoviesController < ApplicationController
     #======================================
     #Actually queries
     @movies = Movie.where(rating: session[:ratingFilters])
-    @movies = @movies.order(@sort_by)
+    @movies = @movies.order(session[:sort])
   end
 
   def new
