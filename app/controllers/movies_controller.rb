@@ -12,6 +12,8 @@ class MoviesController < ApplicationController
   end
 
   def index
+    puts "RAITINGFILTERS #{session[:ratingFilters]}"
+    puts "G CHECK: #{session[:ratingFilters].include?("G")}"
     @all_ratings = ['G', 'PG', 'PG-13', 'R']
     sortSel = params[:sort_by]
     #@sort_by = params[:sort_by]
@@ -21,12 +23,14 @@ class MoviesController < ApplicationController
       end
     end
     @select = params[:ratings]
+    puts "Select: #{@select}"
     if (@select.nil?)
       if (session[:ratingFilters].nil?)
         session[:ratingFilters] = @all_ratings
       end #if the ratingFilters are already there, then no need to update them
     else
       session[:ratingFilters] = @select.keys
+      puts "Key Mod"
     end
     #puts "Select: #{@select}"
     #puts "Keys: #{temp}"
