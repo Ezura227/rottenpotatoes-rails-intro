@@ -1,5 +1,5 @@
 class MoviesController < ApplicationController
-
+  
   @@sort_by = nil
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date)
@@ -12,13 +12,27 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @sort_by = params[:sort_by]
-    @movies = Movie.all
+    @all_ratings = ['G', 'PG', 'PG-13', 'R']
+    sortSel = params[:sort_by]
+    #@sort_by = params[:sort_by]
+    if !(sortSel.nil?)
+      @sort_by = sortSel
+    end
+    @select = params[:ratings]
+    if (@select.nil?)
+      if (session[:ratingFilters].nil?)
+        session[:ratingFilters] = @all_ratings
+      end #if the ratingFilters are already there, then no need to update them
+    else
+      session[:ratingFilters] = @select.keys
+    end
+    #puts "Select: #{@select}"
+    #puts "Keys: #{temp}"
+    #@movies = Movie.with_ratings(temp)
+    #======================================
+    #Actually queries
+    @movies = Movie.where(rating: session[:ratingFilters])
     @movies = @movies.order(@sort_by)
-
-    
-    
-    
   end
 
   def new
